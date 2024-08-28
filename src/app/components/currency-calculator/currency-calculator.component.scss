@@ -1,0 +1,18 @@
+.field-panel {
+  display: flex;
+  // flex-direction: column;
+  // flex-grow: 4;
+  flex-wrap: wrap;
+  // justify-content: space-evenly;
+
+  .mat-mdc-form-field {
+    margin-right: 10px;
+  }
+}
+
+.action-panel {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  max-width: 970px;
+}

@@ -1,0 +1,102 @@
+<mat-card appearance="outlined">
+  <mat-card-header>
+    <mat-card-title>Currency Exchange Calculator</mat-card-title>
+  </mat-card-header>
+  <form [formGroup]="calcForm" (ngSubmit)="convertCurrency()">
+    <mat-card-content>
+      <div class="field-panel">
+        <mat-form-field floatLabel="always">
+          <mat-label>Amount</mat-label>
+          <input
+            required
+            matInput
+            type="number"
+            formControlName="amount"
+            placeholder="0"
+          />
+          <span matTextPrefix
+            ><i class="material-icons">currency_exchange</i>&nbsp;</span
+          >
+          <span matTextSuffix>.00</span>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>From:</mat-label>
+          <input
+            type="text"
+            placeholder="Pick currency"
+            aria-label="Number"
+            matInput
+            formControlName="fromCurrency"
+            [matAutocomplete]="autoFrom"
+            required
+          />
+          <mat-autocomplete
+            #autoFrom="matAutocomplete"
+            [displayWith]="displayFn"
+          >
+            @for (option of filteredFromOptions | async; track option) {
+            <mat-option [value]="option"
+              >{{ option.code }} - {{ option.currency }}</mat-option
+            >
+            }
+          </mat-autocomplete>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>To:</mat-label>
+          <input
+            type="text"
+            placeholder="Pick currency"
+            aria-label="Number"
+            matInput
+            formControlName="toCurrency"
+            [matAutocomplete]="autoTo"
+            required
+          />
+          <mat-autocomplete #autoTo="matAutocomplete" [displayWith]="displayFn">
+            @for (option of filteredToOptions | async; track option) {
+            <mat-option [value]="option"
+              >{{ option.code }} - {{ option.currency }}</mat-option
+            >
+            }
+          </mat-autocomplete>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Choose a date</mat-label>
+          <input
+            required
+            matInput
+            formControlName="date"
+            [matDatepicker]="picker"
+            (dateChange)="onDateChange.emit($event.value)"
+          />
+          <mat-hint>MM/DD/YYYY</mat-hint>
+          <mat-datepicker-toggle
+            matIconSuffix
+            [for]="picker"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+      </div>
+    </mat-card-content>
+    <mat-card-footer>
+      <div class="action-panel">
+        <button mat-button type="reset">Reset</button>
+        <button mat-flat-button type="submit" [disabled]="!calcForm.valid">
+          Convert
+        </button>
+      </div>
+    </mat-card-footer>
+  </form>
+</mat-card>
+
+<div *ngIf="result !== null">
+  <h3>
+    {{ calcForm.controls["amount"].value }}
+    {{ calcForm.controls["fromCurrency"].value?.code }} =
+    {{ result | number : "1.2-2" }}
+    {{ calcForm.controls["toCurrency"].value?.code }}
+  </h3>
+</div>
